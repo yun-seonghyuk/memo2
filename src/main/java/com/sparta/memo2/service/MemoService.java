@@ -4,15 +4,18 @@ import com.sparta.memo2.dto.MemoRequestDto;
 import com.sparta.memo2.dto.MemoResponseDto;
 import com.sparta.memo2.entity.Memo;
 import com.sparta.memo2.repository.MemoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MemoService {
+
 
     private final MemoRepository memoRepository;
 
     public MemoService(MemoRepository memoRepository) {
-        this.memoRepository = new MemoRepository();
+        this.memoRepository = memoRepository;
     }
 
 
