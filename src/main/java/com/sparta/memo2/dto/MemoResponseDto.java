@@ -1,11 +1,17 @@
 package com.sparta.memo2.dto;
 
 import com.sparta.memo2.entity.Memo;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MemoResponseDto {
 
     private Long id;
@@ -14,13 +20,16 @@ public class MemoResponseDto {
     private LocalDateTime createAt;
     private LocalDateTime modifiedAt;
 
-    public MemoResponseDto(Memo memo) {
-        this.id = memo.getId();
-        this.username = memo.getUsername();
-        this.contents = memo.getContents();
-        this.createAt = memo.getCreatedAt();
-        this.modifiedAt = memo.getModifiedAt();
+    public static MemoResponseDto of (Memo memo) {
+        return MemoResponseDto.builder()
+                .id(memo.getId())
+                .username(memo.getUsername())
+                .createAt(memo.getCreatedAt())
+                .contents(memo.getContents())
+                .modifiedAt(memo.getModifiedAt())
+                .build();
     }
+
 
 
 }

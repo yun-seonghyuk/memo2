@@ -4,54 +4,52 @@ import com.sparta.memo2.dto.MemoRequestDto;
 import com.sparta.memo2.dto.MemoResponseDto;
 import com.sparta.memo2.entity.Memo;
 import com.sparta.memo2.repository.MemoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MemoService {
-
 
     private final MemoRepository memoRepository;
 
-    public MemoService(MemoRepository memoRepository) {
-        this.memoRepository = memoRepository;
-    }
-
-
+    @Transactional
     public MemoResponseDto createMemo(MemoRequestDto requestDto) {
-        // RequestDto -> Entity
-        Memo memo = new Memo(requestDto);
-
         // DB 저장
-        Memo saveMemo =  memoRepository.save(memo);
-
+        Memo memo =  memoRepository.save( Memo.of(requestDto));
         // Entity -> ResponseDto
-        MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
-
-        return memoResponseDto;
+        return MemoResponseDto.of(memo);
     }
 
+    @Transactional(readOnly = true)
     public List<MemoResponseDto> getMemos() {
-
         // DB 조회
-        return memoRepository.findByOrderByModifiedAtDesc().stream().map(MemoResponseDto::new).toList();
+        return memoRepository.findByOrderByModifiedAtDesc()
+                .stream()
+                .map(MemoResponseDto::of) // 메서드 참조를 사용하여 MemoResponseDto.of()를 호출
+                .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<MemoResponseDto> getMemosByKeyword(String keyword) {
-        return memoRepository.findAllByContentsContainsOrderByModifiedAtDesc(keyword).stream().map(MemoResponseDto::new).toList();
+
+        return memoRepository.findAllByContentsContainsOrderByModifiedAtDesc(keyword)
+                .stream()
+                .map(MemoResponseDto::of) // 메서드 참조를 사용하여 MemoResponseDto.of()를 호출
+                .toList();
     }
+
     @Transactional
     public Long updateMemo(Long id, MemoRequestDto requestDto) {
-
-        // 해당 메모가 DB에 존재하는지 확인
         Memo memo = findMemo(id);
-        // memo 내용 수정
         memo.update(requestDto);
         return id;
     }
 
+    @Transactional
     public Long deleteMemo(Long id) {
         // 해당 메모가 DB에 존재하는지 확인
         Memo memo = findMemo(id);

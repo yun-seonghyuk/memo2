@@ -2,25 +2,24 @@ package com.sparta.memo2.controller;
 
 import com.sparta.memo2.dto.MemoRequestDto;
 import com.sparta.memo2.dto.MemoResponseDto;
-import com.sparta.memo2.entity.Memo;
 import com.sparta.memo2.service.MemoService;
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class MemoController {
 
-
     private final MemoService memoService;
-    public MemoController(MemoService memoService) {
-        this.memoService = memoService;
-    }
 
     @GetMapping("memos/contents")
     public List<MemoResponseDto> getMemosByKeyword(@RequestParam String keyword){
+
         return memoService.getMemosByKeyword(keyword);
     }
 
